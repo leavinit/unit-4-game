@@ -1,0 +1,8 @@
+#characterList {
+    display: flex;
+}
+
+
+#character {
+    border : solid 2px lime;
+}
