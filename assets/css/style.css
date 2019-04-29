@@ -1,7 +1,9 @@
 
 body{
-    background-color: black;
+    width: 80%;
+    margin: auto;
     color: white;
+    background: black url("../images/bg_walker.png") fixed no-repeat center;
 }
 h1, h2 {
     padding : 10px 30px;
