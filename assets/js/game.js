@@ -26,38 +26,118 @@ class player {
         $("#characterList")
         .append($('<img>',{id:this.charName,src:this.charImage,alt:this.charName}));
     
-        $("#"+this.charName).wrap($('<div>',{class:"character"}));
+        $("#"+this.charName).css("position","relative")
+            .wrap($('<div>',{class:"character", id:this.charName+"Div"}));
+        $("#"+this.charName).css('border','solid 2px lime')
+            .css('display','relative');
+
+        //console.log("#"+this.charName+"Div");
         
+        $("#"+this.charName+"Div").css("position","relative")
+            .append(
+                "<div class='nameTag'>"+
+                    "<div>"+this.charName+"</div>"+
+                    "<div class='hpClass'>HP: "+this.charHP+"</div>"+
+                "</div>");
+        
+        // $(".hpClass").text(this.charHP-20);
+        $(".nameTag")
+            .css("text-align","center").css("position","absolute")
+            .css("top","66px").css("left","5%")
+            .css("width","80%").css("color","white")
+            .css("background-color","gray").css("opacity",".75")
+            .css("border","1px solid white");
     };
 }
 
-//Event Listeners
-
-
-
-//Testing
-boba  = new player(
+// Create the players
+Boba_Fett  = new player(
     "Boba_Fett",
     "assets/images/boba_fett.jpg",
     {AP:10,HP:100,CAP:30}
 );
-jabba  = new player(
+Jabba_the_Hutt  = new player(
     "Jabba_the_Hutt",
     "assets/images/jabba-the-hutt.jpeg",
     {AP:10,HP:100,CAP:30}
 );
-lando  = new player(
+Lando_Calrissian = new player(
     "Lando_Calrissian",
     "assets/images/lando.jpeg",
     {AP:10,HP:100,CAP:30}
 );
-yoda  = new player(
+Yoda = new player(
     "Yoda",
     "assets/images/yoda.jpg",
     {AP:10,HP:100,CAP:30}
 );
 
+characters = [Boba_Fett,Jabba_the_Hutt,Lando_Calrissian,Yoda];
 
-// console.log(player1.charCAP);
-// $('body').text(player1.charCAP);
-// $('#characterList').prepend($('<img>',{id:player1.charName,src:player1.charImage}));
+
+
+//Event Listeners
+
+var charSelected = false;
+var enemySelected = false;
+var charId;
+var selectedId;
+$(".character > img").click(function(){
+    if (!charSelected){
+        charId = $(this).attr("id");
+        $(this).css("border","solid 2px red");
+        enemies = $(this).parent().siblings()
+        enemies.css("display","None");
+        $("#enemiesList").html(enemies);
+        enemies.css("display","block").addClass("enemyCharacter");
+        charSelected = true;
+        
+    }
+    
+    $(".enemyCharacter > img").click(function(){
+        if (charSelected && !enemySelected){
+            selectedId = $(this).attr("id");
+            enemySelected = true;
+
+            console.log("clicked");
+            otherEnemies = $(this).parent().siblings();
+            otherEnemies.children().css("border" , "solid 2px black");
+            selectedEnemy = $(this).parent();
+            
+            selectedEnemy.hide();
+            
+            $("#defenderSection").html(selectedEnemy);
+            selectedEnemy.show().addClass("selectedEnemy");
+            // temp = selectedEnemy.find("img");
+            
+            console.log("enemy selected was:  " + selectedId);
+            console.log("character selected was:  " + charId);
+
+        }
+    });
+    
+    $("#fightButton").click(function(evt){
+        
+        if (charSelected && enemySelected){
+            // console.log(charId);
+            
+            //characters.find(function(x){charId == x}).charHP -= characters[selectedId].charCap;
+            // console.log(characters.find(function(x){charId == x}));
+            // console.log(selectedId);
+//            myArray.find(x => x.id === '45').foo;
+            console.log(characters.find(x => x.charName === charId));
+            console.log(characters.find(x => x.charName === selectedId));
+            attacker = characters.find(x => x.charName === charId);
+            defender = characters.find(x => x.charName === selectedId)
+            defender.charHP -= attacker.charAP;
+            attacker.charHP -= defender.charCAP;
+            console.log(charId + "'s new hp is "+ attacker.charHP);
+            console.log(selectedId + "'s new hp is "+ defender.charHP);
+
+        }
+        evt.stopImmediatePropagation();
+        
+    });
+});
+
+

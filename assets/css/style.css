@@ -1,8 +1,24 @@
+
+body{
+    background-color: black;
+    color: white;
+}
+h1, h2 {
+    padding : 10px 30px;
+}
+
+button {
+    margin-left : 20%;
+    padding : 10px;
+}
 #characterList {
     display: flex;
 }
 
+#enemiesList {
+    display: flex;
+}
 
-#character {
-    border : solid 2px lime;
+#defenderSection {
+    display: flex;
 }
