@@ -43,8 +43,9 @@ class player {
         // $(".hpClass").text(this.charHP-20);
         $(".nameTag")
             .css("text-align","center").css("position","absolute")
-            .css("top","66px").css("left","5%")
-            .css("width","80%").css("color","white")
+            .css("top","60px").css("margin","auto")
+            .css("left","14%")
+            .css("padding","2px 3%").css("color","white")
             .css("background-color","gray").css("opacity",".75")
             .css("border","1px solid white");
     };
@@ -119,18 +120,22 @@ $(".character > img").click(function(){
     $("#fightButton").click(function(evt){
         
         if (charSelected && enemySelected){
-            // console.log(charId);
             
-            //characters.find(function(x){charId == x}).charHP -= characters[selectedId].charCap;
-            // console.log(characters.find(function(x){charId == x}));
-            // console.log(selectedId);
-//            myArray.find(x => x.id === '45').foo;
+//          myArray.find(x => x.id === '45').foo;
             console.log(characters.find(x => x.charName === charId));
             console.log(characters.find(x => x.charName === selectedId));
             attacker = characters.find(x => x.charName === charId);
             defender = characters.find(x => x.charName === selectedId)
+            
+            //Adjust stats upon attack
             defender.charHP -= attacker.charAP;
             attacker.charHP -= defender.charCAP;
+            
+            //Update status section div
+            attackerStatus = $("<div>").text(charId + "'s new hp is "+ attacker.charHP);
+            defenderStatus = $("<div>").text(selectedId  + "'s new hp is "+ defender.charHP);
+            statusDiv = $("<div>").append(attackerStatus).append(defenderStatus);
+            $("#statusSection").html(statusDiv);
             console.log(charId + "'s new hp is "+ attacker.charHP);
             console.log(selectedId + "'s new hp is "+ defender.charHP);
 
