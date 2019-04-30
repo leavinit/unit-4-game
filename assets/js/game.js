@@ -51,29 +51,32 @@ class player {
     };
 }
 
-// Create the players
-Boba_Fett  = new player(
-    "Boba_Fett",
-    "assets/images/boba_fett.jpg",
-    {AP:10,HP:100,CAP:30}
-);
-Jabba_the_Hutt  = new player(
-    "Jabba_the_Hutt",
-    "assets/images/jabba-the-hutt.jpeg",
-    {AP:10,HP:100,CAP:30}
-);
-Lando_Calrissian = new player(
-    "Lando_Calrissian",
-    "assets/images/lando.jpeg",
-    {AP:10,HP:100,CAP:30}
-);
-Yoda = new player(
-    "Yoda",
-    "assets/images/yoda.jpg",
-    {AP:10,HP:100,CAP:30}
-);
+function startGame(){
+    // Create the players
+    var Boba_Fett  = new player(
+        "Boba_Fett",
+        "assets/images/boba_fett.jpg",
+        {AP:10,HP:100,CAP:30}
+    );
+    var Jabba_the_Hutt  = new player(
+        "Jabba_the_Hutt",
+        "assets/images/jabba-the-hutt.jpeg",
+        {AP:10,HP:100,CAP:30}
+    );
+    var Lando_Calrissian = new player(
+        "Lando_Calrissian",
+        "assets/images/lando.jpeg",
+        {AP:10,HP:100,CAP:30}
+    );
+    var Yoda = new player(
+        "Yoda",
+        "assets/images/yoda.jpg",
+        {AP:10,HP:100,CAP:30}
+    );
+    return [Boba_Fett,Jabba_the_Hutt,Lando_Calrissian,Yoda];
+}
 
-characters = [Boba_Fett,Jabba_the_Hutt,Lando_Calrissian,Yoda];
+var characters = startGame();
 
 
 
@@ -83,8 +86,11 @@ var charSelected = false;
 var enemySelected = false;
 var charId;
 var selectedId;
+
+
 $(".character > img").click(function(){
     if (!charSelected){
+        console.log("image clicked");
         charId = $(this).attr("id");
         $(this).css("border","solid 2px red");
         enemies = $(this).parent().siblings()
@@ -118,29 +124,59 @@ $(".character > img").click(function(){
     });
     
     $("#fightButton").click(function(evt){
-        
+        evt.stopImmediatePropagation();
         if (charSelected && enemySelected){
             
 //          myArray.find(x => x.id === '45').foo;
-            console.log(characters.find(x => x.charName === charId));
-            console.log(characters.find(x => x.charName === selectedId));
-            attacker = characters.find(x => x.charName === charId);
-            defender = characters.find(x => x.charName === selectedId)
+            // console.log(characters.find(x => x.charName === charId));
+            // console.log(characters.find(x => x.charName === selectedId));
+            var attacker = characters.find(x => x.charName === charId);
+            var defender = characters.find(x => x.charName === selectedId)
             
             //Adjust stats upon attack
             defender.charHP -= attacker.charAP;
+            
+            //If defender hp < 0, eliminate that defender and restart playing
+            if (defender.charHP <= 0){
+                console.log("defender died: " + selectedId);
+                $("#"+selectedId+"Div").hide();
+                $("#characterList").append($("#enemiesList").children());
+                // $("#characterList > img").css("border","solid 2x lime");
+            }
+
             attacker.charHP -= defender.charCAP;
             
-            //Update status section div
-            attackerStatus = $("<div>").text(charId + "'s new hp is "+ attacker.charHP);
-            defenderStatus = $("<div>").text(selectedId  + "'s new hp is "+ defender.charHP);
-            statusDiv = $("<div>").append(attackerStatus).append(defenderStatus);
-            $("#statusSection").html(statusDiv);
-            console.log(charId + "'s new hp is "+ attacker.charHP);
-            console.log(selectedId + "'s new hp is "+ defender.charHP);
-
+            //If character hp < 0, game over and reset the game
+            if (attacker.charHP <= 0){
+                console.log("attacker died" + charId);
+                console.log("You Lose. Try Again.")
+                charSelected = false;
+                enemySelected = false;
+                charId = "";
+                selectedId="";
+                charSelected = false;
+                enemySelected = false;
+                $("#characterList").empty();
+                $("#statusSection").empty();
+                $('#defenderSection').empty();
+                $("#enemiesList").empty();
+                // $("#fightButton").off();  //turns off button click events
+                attacker = "";
+                defender = "";
+                characters = startGame();
+                location.reload();
+            }
+            else {
+                //Update status section div
+                attackerStatus = $("<div>").text(charId + "'s new hp is "+ attacker.charHP);
+                defenderStatus = $("<div>").text(selectedId  + "'s new hp is "+ defender.charHP);
+                statusDiv = $("<div>").append(attackerStatus).append(defenderStatus);
+                $("#statusSection").html(statusDiv);
+                console.log(charId + "'s new hp is "+ attacker.charHP);
+                console.log(selectedId + "'s new hp is "+ defender.charHP);
+            }
         }
-        evt.stopImmediatePropagation();
+        
         
     });
 });
