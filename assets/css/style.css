@@ -24,3 +24,9 @@ button {
 #defenderSection {
     display: flex;
 }
+
+#statusSection {
+    font-size : 2em;
+    opacity: .8;
+    background-color: grey;
+}

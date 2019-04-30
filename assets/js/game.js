@@ -6,6 +6,7 @@ class player {
         this.charImage = imgFile;
         this.charAP = stats.AP;
         this.charHP = stats.HP;
+        this.charBaseHP = stats.HP;
         this.charCAP = stats.CAP;
         this.display();
     }
@@ -18,7 +19,7 @@ class player {
     charAP = "";
     charHP = "";
     charCAP= "";
-
+    charBaseHP = "";
     // Character Display Function (Shows images in characterList Div for player to select)
     display = function(){
         //Dyanmically add images
@@ -56,22 +57,22 @@ function startGame(){
     var Boba_Fett  = new player(
         "Boba_Fett",
         "assets/images/boba_fett.jpg",
-        {AP:10,HP:100,CAP:30}
+        {AP:20,HP:100,CAP:10}
     );
     var Jabba_the_Hutt  = new player(
         "Jabba_the_Hutt",
         "assets/images/jabba-the-hutt.jpeg",
-        {AP:10,HP:100,CAP:30}
+        {AP:18,HP:200,CAP:5}
     );
     var Lando_Calrissian = new player(
         "Lando_Calrissian",
         "assets/images/lando.jpeg",
-        {AP:10,HP:100,CAP:30}
+        {AP:15,HP:300,CAP:20}
     );
     var Yoda = new player(
         "Yoda",
         "assets/images/yoda.jpg",
-        {AP:10,HP:100,CAP:30}
+        {AP:8,HP:150,CAP:15}
     );
     return [Boba_Fett,Jabba_the_Hutt,Lando_Calrissian,Yoda];
 }
@@ -135,19 +136,24 @@ $(".character > img").click(function(){
             
             //Adjust stats upon attack
             defender.charHP -= attacker.charAP;
-            
+            attacker.charAP += attacker.charBaseHP;
+            attacker.charHP -= defender.charCAP;
+
             //If defender hp < 0, eliminate that defender and restart playing
             if (defender.charHP <= 0){
                 console.log("defender died: " + selectedId);
+                diedMsg = "<div>"+ selectedId+ " died: Well Done!</div>";
+                $("#statusSection").html(diedMsg);
                 $("#"+selectedId+"Div").hide();
                 $("#characterList").append($("#enemiesList").children());
+                $(".character > img").css("border","solid 2px lime");
+                
+                //TO DO:  UPDATE CHARACTER LIST
+                //characters.splice( ,1) //gotta find the index of the dead enemy
                 // $("#characterList > img").css("border","solid 2x lime");
             }
-
-            attacker.charHP -= defender.charCAP;
-            
             //If character hp < 0, game over and reset the game
-            if (attacker.charHP <= 0){
+            else if (attacker.charHP <= 0){
                 console.log("attacker died" + charId);
                 console.log("You Lose. Try Again.")
                 charSelected = false;
@@ -155,7 +161,8 @@ $(".character > img").click(function(){
                 // charId = "";
                 // selectedId="";
                 $("#characterList").empty();
-                $("#statusSection").empty();
+                msg = "<div>You Lose. Try again!</div>"
+                $("#statusSection").html(msg);
                 $('#defenderSection').empty();
                 $("#enemiesList").empty();
                 // $("#fightButton").off();  //turns off button click events
@@ -163,6 +170,7 @@ $(".character > img").click(function(){
                 defender = "";
                 characters = startGame();
                 // location.reload();
+                //TO DO: FIX GAME RELOAD
             }
             else {
                 //Update status section div
@@ -179,4 +187,4 @@ $(".character > img").click(function(){
     });
 });
 
-
+//GAME UNFINISHED. HIT MAJOR ROADBLOCKS TRYING TO RESTART THE GAME :(
