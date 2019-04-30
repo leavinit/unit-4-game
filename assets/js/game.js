@@ -152,10 +152,8 @@ $(".character > img").click(function(){
                 console.log("You Lose. Try Again.")
                 charSelected = false;
                 enemySelected = false;
-                charId = "";
-                selectedId="";
-                charSelected = false;
-                enemySelected = false;
+                // charId = "";
+                // selectedId="";
                 $("#characterList").empty();
                 $("#statusSection").empty();
                 $('#defenderSection').empty();
@@ -164,7 +162,7 @@ $(".character > img").click(function(){
                 attacker = "";
                 defender = "";
                 characters = startGame();
-                location.reload();
+                // location.reload();
             }
             else {
                 //Update status section div
